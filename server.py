@@ -3,8 +3,6 @@ import math
 
 app = Flask(__name__)
 
-# aaaaaaaaaaaaa
-
 @app.route("/")
 def root():
     myname = request.args.get("name")
