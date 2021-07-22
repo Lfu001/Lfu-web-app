@@ -1,5 +1,7 @@
 from flask import *
 import math
+import pandas as pd
+import historyDB as db
 
 app = Flask(__name__)
 
@@ -19,7 +21,9 @@ def link():
 def area_circle():
     radius = request.args.get("r", default=None, type=float)
     answer = round(radius**2 * math.pi, 2)
-    return render_template("circle.html", radius=radius, answer=answer)
+    db.addHistory("circle", [radius, answer])
+    table = pd.DataFrame(db.getHistory("circle"), columns=["半径", "面積"]).iloc[::-1].head(10).to_html(index=False)
+    return render_template("circle.html", radius=radius, answer=answer, table=table)
 
 
 @app.route("/area/rectangle")
@@ -27,7 +31,9 @@ def area_rectangle():
     a = request.args.get("a", default=None, type=float)
     b = request.args.get("b", default=None, type=float)
     answer = round(a * b, 2)
-    return render_template("rectangle.html", a=a, b=b, answer=answer)
+    db.addHistory("rectangle", [a, b, answer])
+    table = pd.DataFrame(db.getHistory("rectangle"), columns=["縦", "横", "面積"]).iloc[::-1].head(10).to_html(index=False)
+    return render_template("rectangle.html", a=a, b=b, answer=answer, table=table)
 
 
 # @app.route("/area/triangle")
