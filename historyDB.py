@@ -1,8 +1,9 @@
 import sqlite3
+import os
 
 
 def addHistory(shape, data):
-    con = sqlite3.connect("/home/yuto/ドキュメント/webApp/history.sqlite3")
+    con = sqlite3.connect(os.path.join(os.path.dirname(__file__), "history.sqlite3"))
     cur = con.cursor()
 
     if shape == "rectangle":
@@ -16,7 +17,7 @@ def addHistory(shape, data):
 
 
 def getHistory(shape):
-    con = sqlite3.connect("/home/yuto/ドキュメント/webApp/history.sqlite3")
+    con = sqlite3.connect(os.path.join(os.path.dirname(__file__), "history.sqlite3"))
     cur = con.cursor()
 
     if shape == "rectangle":
