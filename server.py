@@ -2,6 +2,7 @@ from flask import *
 import math
 import pandas as pd
 import historyDB as db
+import os
 
 app = Flask(__name__)
 
@@ -49,4 +50,5 @@ def hello():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=9761)
+    port = int(os.environ.get("PORT", 9761))
+    app.run(debug=True, port=port)
