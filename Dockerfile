@@ -23,4 +23,4 @@ RUN pip3 install flask pandas
 
 # アプリを起動する
 ENV FLASK_APP server.py
-CMD [ "flask", "run", "--host", "0.0.0.0", "--port", "9761" ]
+CMD [ "flask", "run", "--host", "0.0.0.0", "--port", "$PORT" ]
