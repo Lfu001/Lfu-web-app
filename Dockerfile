@@ -8,7 +8,7 @@ FROM python:3.9-slim
 RUN apt-get update && apt-get install -y git
 
 # アプリのコードを clone してくる
-RUN git clone https://github.com/Lfu001/PBL-Test.git myapp
+RUN git clone https://github.com/Lfu001/Lfu-web-app.git myapp
 
 WORKDIR /myapp
 
