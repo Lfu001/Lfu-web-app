@@ -1,6 +1,6 @@
 # FROM python:3.9-alpine
 # FROM amancevice/pandas:1.3.3-slim
-FROM python:3.9-slim
+FROM python:3.7-slim
 
 # Git をインストールする
 # RUN apk add --update
@@ -14,7 +14,8 @@ WORKDIR /myapp
 
 # 必要な pip パッケージをインストールする
 RUN pip3 install --upgrade pip
-RUN pip3 install flask pandas
+RUN pip3 install flask pandas==1.1.5 tensorflow==2.6.0 keras==2.6.0 Pillow==7.1.2
+# RUN pip3 install --upgrade Pillow
 # RUN apk add --no-cache python3-dev libstdc++ && \
 #     apk add --no-cache g++ && \
 #     ln -s /usr/include/locale.h /usr/include/xlocale.h && \

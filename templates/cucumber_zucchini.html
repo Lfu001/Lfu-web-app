@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <style type="text/css">
+            #preview img {
+                width: 200px;
+                margin: 10px;
+                border: solid 1px silver;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>キュウリかズッキーニか判別する</h1>
+        
+        <form action="/classification/cucumber_zucchini" method="post" enctype="multipart/form-data">
+            <p>
+                <input type="file" id="file" name="file" accept="image/png, image/jpeg">
+            </p>
+            <p>
+                <input type="submit" value="送信">
+                <input type="reset", value="リセット">
+            </p>
+            
+        </form>
+
+        <div id="preview"></div>
+
+        {% for table in tables %}
+            {{titles[loop.index]}}
+            {{ table|safe }}
+        {% endfor %}
+
+        <script type="text/javascript">
+            function previewFile(file) {
+                // プレビュー画像を追加する要素
+                const preview = document.getElementById("preview");
+
+                // FileReaderオブジェクトを作成
+                const reader = new FileReader();
+
+                // ファイルが読み込まれたときに実行する
+                reader.onload = function (e) {
+                    const imageUrl = e.target.result; // 画像のURLはevent.target.resultで呼び出せる
+                    const img = document.createElement("img"); // img要素を作成
+                    img.src = imageUrl; // 画像のURLをimg要素にセット
+                    preview.appendChild(img); // #previewの中に追加
+                }
+
+                // ファイルを読み込む
+                reader.readAsDataURL(file);
+            }
+
+            // <input>でファイルが選択されたときの処理
+            const fileInput = document.getElementById("file");
+            const handleFileSelect = () => {
+                const files = fileInput.files;
+                for (let i = 0; i < files.length; i++) {
+                    previewFile(files[i]);
+                }
+            }
+            if (!fileInput){ print("fileInput is null") }
+            fileInput.addEventListener("change", handleFileSelect);
+        </script>
+    </body>
+</html>

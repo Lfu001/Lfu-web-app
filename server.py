@@ -2,6 +2,8 @@ from flask import *
 import math
 import pandas as pd
 import historyDB as db
+import zuccumberNet as zn
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
@@ -11,6 +13,29 @@ app = Flask(__name__)
 def root():
     # myname = request.args.get("name")
     return render_template("home.html")
+
+
+@app.route("/classification")
+def image_classification():
+    return render_template("classification.html")
+
+
+@app.route("/classification/cucumber_zucchini", methods=["POST", "GET"])
+def cucumber_zucchini():
+    try:
+        if request.method == "GET":
+            return render_template("cucumber_zucchini.html")
+        elif request.method == 'POST':
+            f = request.files.get('file')
+            filepath = secure_filename(f.filename)
+            f.save(filepath)
+            results = zn.predict(filepath)
+            os.remove(filepath)
+            return render_template("cucumber_zucchini.html", tables=[results.to_html(classes="data")], titles=results.columns.values)
+        else:
+            return abort(400)
+    except Exception as e:
+        return str(e)
 
 
 @app.route("/area")
