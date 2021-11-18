@@ -28,20 +28,19 @@
                 <span class="mdl-layout-title">Lfu ToolBox</span>
                 <div class="mdl-layout-spacer"></div>
                 <nav class="mdl-navigation mdl-layout--large-screen-only">
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="/area">図形の面積の計算</a>
+                    <a class="mdl-navigation__link" href="/classification">画像の分類</a>
                 </nav>
             </div>
         </header>
         <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Title</span>
+            <span class="mdl-layout-title">Lfu ToolBox</span>
             <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="/area/circle">円の面積の計算</a>
+                <a class="mdl-navigation__link" href="/area/rectangle">長方形の面積の計算</a>
+            </nav>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="/classification/cucumber_zucchini">キュウリとズッキーニの分類</a>
             </nav>
         </div>
         <main class="mdl-layout__content">
@@ -53,76 +52,114 @@
                             width: 150px;
                         }
                     </style>
-                    <div>半径の値</div>
+                    <div>半径の長さ</div>
                     <form action="/area/circle" method="GET" style="padding: 0 10px;">
                         <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="radius" name="r">
+                            <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="radius" name="r" onkeyup="keyupCheck()">
                             <label class="mdl-textfield__label" for="radius">例: 150</label>
                             <span class="mdl-textfield__error">正の値を入力してください</span>
                         </div>
-                        <button id="calculate" class="mdl-button mdl-js-button mdl-button--raised" style="margin-left: 20px;">計算</button>
+                        <button id="calculate" class="mdl-button mdl-js-button mdl-button--raised" style="margin-left: 20px;" disabled>計算</button>
+                        <script>
+                            function keyupCheck() {
+                                var keyupValue = document.getElementById("radius").value;
+                                const regex = /^[0-9]*(\.[0-9]+)?$/;
+                                const result = regex.test(keyupValue);
+                                if (keyupValue == "" || !result) {
+                                    document.getElementById("calculate").disabled = true;
+                                } else {
+                                    document.getElementById("calculate").disabled = false;
+                                }
+                            }
+                        </script>
                     </form>
-                    
                 </div>
+
+                <style>
+                    font {
+                        padding: 0px 3px;
+                    }
+               </style>
                 <div style="padding-top: 15px;">半径<font size="5">{{radius}}</font>の円の面積は<font size="7" color="red">{{answer}}</font></div>
                 <div id="stage" style="padding: 20px;"></div>
                 <div><font size="3" color="black">履歴</font></div>
                 <iframe id="history" frameborder="0" style="width: 165px; height: 268px;"></iframe>
 
                 <script type="text/javascript">
-                    window.onload = function () {
-                        var r = {{radius|tojson}};
-                        document.getElementById("stage").style.width = (2 * r + 20) + "px";
-                        document.getElementById("stage").style.height = (2 * r + 20) + "px";
-                        var stage = acgraph.create("stage");
-                        stage.circle(r + 10, r + 10, r)
-                            .fill([".2 rgb(50, 105, 220)", ".7 rgb(80, 170, 230)"], 135, true);
+                    var r = {{radius|tojson}};
+                    document.getElementById("stage").style.width = (2 * r + 20) + "px";
+                    document.getElementById("stage").style.height = (2 * r + 20) + "px";
+                    var stage = acgraph.create("stage");
+                    stage.circle(r + 10, r + 10, r)
+                        .fill([".2 rgb(50, 105, 220)", ".7 rgb(80, 170, 230)"], 135, true);
 
-                        let iframe = document.getElementById("history");
-                        // ↓ mdl-layout の外側ではこれでできてたが、内側ではできなかった。
+                    let iframe = document.getElementById("history");
+                    // ↓ mdl-layout の外側ではこれでできてたが、内側ではできなかった。
 
-                        // let history_doc = iframe.contentDoccument || iframe.contentWindow.document;
-                        // let table = history_doc.getElementsByClassName("dataframe")[0];
-                        // table.setAttribute("class", "mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp");
-                        // table.removeAttribute("border");
-                        // table.setAttribute("style", "margin: 5px;")
+                    // let history_doc = iframe.contentDoccument || iframe.contentWindow.document;
+                    // let table = history_doc.getElementsByClassName("dataframe")[0];
+                    // table.setAttribute("class", "mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp");
+                    // table.removeAttribute("border");
+                    // table.setAttribute("style", "margin: 5px;")
 
-                        // let link1 = document.createElement("link");
-                        // link1.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
-                        // link1.rel = "stylesheet";
-                        // let link2 = document.createElement("link");
-                        // link2.href = "https://code.getmdl.io/1.3.0/material.teal-amber.min.css"
-                        // link2.rel = "stylesheet";
-                        // let script1 = document.createElement("script");
-                        // script1.defer;
-                        // script1.src = "https://code.getmdl.io/1.3.0/material.min.js";
-                        // let meta1 = document.createElement("meta");
-                        // meta1.name = "viewport";
-                        // meta1.content = "width=device-width, initial-scale=1.0";
-                        // let meta2 = document.createElement("meta");
-                        // meta2.charset = "utf-8";
-                        // frames[0].document.head.appendChild(link1);
-                        // frames[0].document.head.appendChild(link2);
-                        // frames[0].document.head.appendChild(script1);
-                        // frames[0].document.head.appendChild(meta1);
-                        // frames[0].document.head.appendChild(meta2);
-                        // console.log(history_doc);
-                        // let history_doc = iframe.contentDoccument || iframe.contentWindow.document;
-                        // let table = history_doc.getElementsByClassName("dataframe")[0];
-                        // let table_width = table.clientWidth;
-                        // iframe.setAttribute("style", "width: " + (table_width + 10) + "px; height: 268px;");
+                    // let link1 = document.createElement("link");
+                    // link1.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
+                    // link1.rel = "stylesheet";
+                    // let link2 = document.createElement("link");
+                    // link2.href = "https://code.getmdl.io/1.3.0/material.teal-amber.min.css"
+                    // link2.rel = "stylesheet";
+                    // let script1 = document.createElement("script");
+                    // script1.defer;
+                    // script1.src = "https://code.getmdl.io/1.3.0/material.min.js";
+                    // let meta1 = document.createElement("meta");
+                    // meta1.name = "viewport";
+                    // meta1.content = "width=device-width, initial-scale=1.0";
+                    // let meta2 = document.createElement("meta");
+                    // meta2.charset = "utf-8";
+                    // frames[0].document.head.appendChild(link1);
+                    // frames[0].document.head.appendChild(link2);
+                    // frames[0].document.head.appendChild(script1);
+                    // frames[0].document.head.appendChild(meta1);
+                    // frames[0].document.head.appendChild(meta2);
+                    // console.log(history_doc);
+                    // let history_doc = iframe.contentDoccument || iframe.contentWindow.document;
+                    // let table = history_doc.getElementsByClassName("dataframe")[0];
+                    // let table_width = table.clientWidth;
+                    // iframe.setAttribute("style", "width: " + (table_width + 10) + "px; height: 268px;");
 
-                        // iframe の srcdoc に完成されたHTMLファイルを渡したらできた。
-                        let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--3dp"';
-                        let head_html1 = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr';
-                        let head_html2 = 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr';
-                        let head_html3 = 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><table ';
+                    // iframe の srcdoc に完成されたHTMLファイルを渡したらできた。
+                    let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: 0px 10px;"';
+                    let head_html = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr'
+                        + 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr'
+                        + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
+                    let tail_html = '</table></body></html>';
                         var a = {{table|tojson}}.replace('border="1" class="dataframe"', text);
-                        var b = a.replace("<table", head_html1 + head_html2 + head_html3);
-                        iframe.srcdoc = b;
+                    var b = a.replace("<table", head_html);
+                    var c = b.replace("</table>", tail_html);
+                    iframe.srcdoc = c;
+
+                    iframe.onload = function() {
+                        let table_document = iframe.contentDocument || iframe.contentWindow.document;
+                        let table_width = table_document.getElementsByClassName("mdl-data-table")[0].offsetWidth;
+                        let table_height = table_document.getElementsByClassName("mdl-data-table")[0].offsetHeight;
+                        iframe.style.width = (table_width + 20).toString() + "px";
+                        iframe.style.height = (table_height + 20).toString() + "px";
                     }
-                </script>               
+                </script>
             </div>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo"></div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">ヘルプ</a></li>
+                    <li><a href="#">プライバシー</a></li>
+                    <li><a href="#">このサイトについて</a></li>
+                </ul>
+                </div>
+                <div class="mdl-mini-footer__right-section">
+                    <small>&copy; 2021 Lfu ToolBox. All rights reserved.</small>
+                </div>
+            </footer>
         </main>
     </div>
 </body>

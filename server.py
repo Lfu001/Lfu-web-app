@@ -46,6 +46,8 @@ def link():
 @app.route("/area/circle")
 def area_circle():
     radius = request.args.get("r", default=None, type=float)
+    if radius is None:
+        radius = 150
     answer = round(radius**2 * math.pi, 2)
     db.addHistory("circle", [radius, answer])
     table = pd.DataFrame(db.getHistory("circle"), columns=["半径", "面積"]).iloc[::-1].head(10).to_html(index=False)
@@ -56,6 +58,9 @@ def area_circle():
 def area_rectangle():
     a = request.args.get("a", default=None, type=float)
     b = request.args.get("b", default=None, type=float)
+    if a is None or b is None:
+        a = 150
+        b = 400
     answer = round(a * b, 2)
     db.addHistory("rectangle", [a, b, answer])
     table = pd.DataFrame(db.getHistory("rectangle"), columns=["縦", "横", "面積"]).iloc[::-1].head(10).to_html(index=False)

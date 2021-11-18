@@ -2,10 +2,109 @@
 <html>
     <head>
         <meta charset="utf-8"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" />
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            div.pagecontent {
+                margin: 0px 30px;
+            }
+            div.cards {
+                display: flex;
+                align-items: center;
+            }
+            div.cards-padding {
+                width: 15px;
+            }
+        </style>
     </head>
     <body>
-        <h1>ようこそ！</h1>
-        <h4>図形の面積の計算は<a href="/area">こちら</a></h4>
-        <h4>画像の分類は<a href="/classification">こちら</a></h4>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Lfu ToolBox</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                        <a class="mdl-navigation__link" href="/area">図形の面積の計算</a>
+                        <a class="mdl-navigation__link" href="/classification">画像の分類</a>
+                    </nav>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">Lfu ToolBox</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="/area/circle">円の面積の計算</a>
+                    <a class="mdl-navigation__link" href="/area/rectangle">長方形の面積の計算</a>
+                </nav>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="/classification/cucumber_zucchini">キュウリとズッキーニの分類</a>
+                </nav>
+            </div>
+            <main class="mdl-layout__content">
+                <div class="pagecontent">
+                    <h1>ようこそ！</h1>
+                    <div class="cards">
+                        <style>
+                            .mdl-card {
+                                width: 330px;
+                                height: 320px;
+                            }
+                            .mdl-card__title {
+                                color: #fff;
+                            }
+                            .area > .mdl-card__title {
+                                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="120px" viewBox="0 0 120 120" width="120px" fill="%23424242"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2l-5.5 9h11z" transform="scale(4)"/><circle cx="17.5" cy="17.5" r="4.5" transform="scale(4)"/><path d="M3 13.5h8v8H3z" transform="scale(4)"/></svg>') center no-repeat #FFC107;
+                            }
+                            .classification > .mdl-card__title {
+                                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="120px" viewBox="0 0 120 120" width="120px" fill="%23424242"><path d="M0 0h24v24H0z" fill="none"/><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 13v7H4V6h5.02c.05-.71.22-1.38.48-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5l-2-2zm-1.5 5h-11l2.75-3.53 1.96 2.36 2.75-3.54zm2.8-9.11c.44-.7.7-1.51.7-2.39C20 4.01 17.99 2 15.5 2S11 4.01 11 6.5s2.01 4.5 4.49 4.5c.88 0 1.7-.26 2.39-.7L21 13.42 22.42 12 19.3 8.89zM15.5 9C14.12 9 13 7.88 13 6.5S14.12 4 15.5 4 18 5.12 18 6.5 16.88 9 15.5 9z" transform="scale(5)"/></svg>') center no-repeat #FFC107;
+                            }
+                        </style>
+                        <div class="mdl-layout-spacer"></div>
+                        <div class="area mdl-card mdl-shadow--2dp">
+                            <div class="mdl-card__title mdl-card--expand">
+                                <h2 class="mdl-card__title-text">図形の面積の計算</h2>
+                            </div>
+                            <div class="mdl-card__supporting-text">
+                                さまざまな図形の面積を計算します。
+                            </div>
+                            <div class="mdl-card__actions mdl-card--border">
+                                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/area">
+                                    試す
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cards-padding"></div>
+                        <div class="classification mdl-card mdl-shadow--2dp">
+                            <div class="mdl-card__title mdl-card--expand">
+                                <h2 class="mdl-card__title-text">画像の分類</h2>
+                            </div>
+                            <div class="mdl-card__supporting-text">
+                                機械学習を用いて画像に写っているものが何かを判定します。
+                            </div>
+                            <div class="mdl-card__actions mdl-card--border">
+                                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/classification">
+                                    試す
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mdl-layout-spacer"></div>
+                    </div>
+                </div>
+            </main>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo"></div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">ヘルプ</a></li>
+                    <li><a href="#">プライバシー</a></li>
+                    <li><a href="#">このサイトについて</a></li>
+                </ul>
+                </div>
+                <div class="mdl-mini-footer__right-section">
+                    <small>&copy; 2021 Lfu ToolBox. All rights reserved.</small>
+                </div>
+            </footer>
+        </div>
     </body>
 </html>
