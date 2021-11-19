@@ -62,7 +62,7 @@ def area_circle():
     table = pd.DataFrame(db.getHistory("circle", user_id), columns=["半径", "面積", "時刻"]).head(10).to_html(index=False)
 
     response = make_response(render_template("circle.html", radius=radius, answer=answer, table=table))
-    max_age = 5
+    max_age = 60 * 60 * 24 * 3
     expires = int(datetime.now().timestamp()) + max_age
     response.set_cookie('user_id', value=user_id, max_age=max_age, expires=expires, secure=None, httponly=False)
 
@@ -89,7 +89,7 @@ def area_rectangle():
     table = pd.DataFrame(db.getHistory("rectangle", user_id), columns=["縦", "横", "面積", "時刻"]).head(10).to_html(index=False)
 
     response = make_response(render_template("rectangle.html", a=a, b=b, answer=answer, table=table))
-    max_age = 5
+    max_age = 60 * 60 * 24 * 3
     expires = int(datetime.now().timestamp()) + max_age
     response.set_cookie('user_id', value=user_id, max_age=max_age, expires=expires, secure=None, httponly=False)
 
