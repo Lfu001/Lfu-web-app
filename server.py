@@ -4,6 +4,8 @@ import pandas as pd
 import historyDB as db
 import zuccumberNet as zn
 from werkzeug.utils import secure_filename
+import uuid
+from datetime import datetime
 import os
 
 app = Flask(__name__)
@@ -49,9 +51,23 @@ def area_circle():
     if radius is None:
         radius = 150
     answer = round(radius**2 * math.pi, 2)
-    db.addHistory("circle", [radius, answer])
-    table = pd.DataFrame(db.getHistory("circle"), columns=["半径", "面積"]).iloc[::-1].head(10).to_html(index=False)
-    return render_template("circle.html", radius=radius, answer=answer, table=table)
+
+    cookie = request.cookies.get("user_id", None)
+    if cookie is None:
+        user_id = str(uuid.uuid4())
+    else:
+        user_id = cookie
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db.addHistory("circle", [radius, answer, user_id, timestamp])
+    table = pd.DataFrame(db.getHistory("circle", user_id), columns=["半径", "面積", "時刻"]).head(10).to_html(index=False)
+
+    response = make_response(render_template("circle.html", radius=radius, answer=answer, table=table))
+    max_age = 5
+    expires = int(datetime.now().timestamp()) + max_age
+    response.set_cookie('user_id', value=user_id, max_age=max_age, expires=expires, secure=None, httponly=False)
+
+    return response
 
 
 @app.route("/area/rectangle")
@@ -62,9 +78,23 @@ def area_rectangle():
         a = 150
         b = 400
     answer = round(a * b, 2)
-    db.addHistory("rectangle", [a, b, answer])
-    table = pd.DataFrame(db.getHistory("rectangle"), columns=["縦", "横", "面積"]).iloc[::-1].head(10).to_html(index=False)
-    return render_template("rectangle.html", a=a, b=b, answer=answer, table=table)
+
+    cookie = request.cookies.get("user_id", None)
+    if cookie is None:
+        user_id = str(uuid.uuid4())
+    else:
+        user_id = cookie
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db.addHistory("rectangle", [a, b, answer, user_id, timestamp])
+    table = pd.DataFrame(db.getHistory("rectangle", user_id), columns=["縦", "横", "面積", "時刻"]).head(10).to_html(index=False)
+
+    response = make_response(render_template("rectangle.html", a=a, b=b, answer=answer, table=table))
+    max_age = 5
+    expires = int(datetime.now().timestamp()) + max_age
+    response.set_cookie('user_id', value=user_id, max_age=max_age, expires=expires, secure=None, httponly=False)
+
+    return response
 
 
 # @app.route("/area/triangle")
