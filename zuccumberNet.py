@@ -7,7 +7,7 @@ import os
 
 
 def predict(fp: str):
-    model = load_model(os.path.join(os.path.dirname(__file__), "models/zuccumberNet.h5"))
+    model = load_model(os.path.join(os.path.dirname(__file__), "model/zuccumberNet.h5"))
 
     temp_img = load_img(fp, target_size=(380, 380))
     temp_img_array = img_to_array(temp_img)
