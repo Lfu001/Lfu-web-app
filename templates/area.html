@@ -91,20 +91,37 @@
                         <div class="mdl-layout-spacer"></div>
                     </div>
                 </div>
+                <div class="layout-spacer"></div>
+                <script>
+                    function setSpacer() {
+                        let doc_height = document.body.offsetHeight;
+                        let window_top = window.pageYOffset;
+                        let view_y = document.getElementsByClassName("layout-spacer")[0].getBoundingClientRect().top;
+                        let footer_height = document.getElementsByClassName("mdl-mini-footer")[0].offsetHeight;
+                        var spacer = doc_height - window_top - view_y - footer_height;
+                        if (spacer <= 30) {
+                            spacer = spacer + 30;
+                        }
+                        document.getElementsByClassName("layout-spacer")[0].style.paddingBottom = (spacer).toString() + "px";
+                    }
+                    window.onload = setSpacer;
+                    window.onresize = setSpacer;
+                </script>
+                <footer class="mdl-mini-footer">
+                    <div class="mdl-mini-footer__left-section">
+                    <div class="mdl-logo"></div>
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><a href="#">ヘルプ</a></li>
+                        <li><a href="#">プライバシー</a></li>
+                        <li><a href="#">このサイトについて</a></li>
+                    </ul>
+                    </div>
+                    <div class="mdl-mini-footer__right-section">
+                        <small>&copy; 2021 Lfu ToolBox. All rights reserved.</small>
+                    </div>
+                </footer>
             </main>
-            <footer class="mdl-mini-footer">
-                <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo"></div>
-                <ul class="mdl-mini-footer__link-list">
-                    <li><a href="#">ヘルプ</a></li>
-                    <li><a href="#">プライバシー</a></li>
-                    <li><a href="#">このサイトについて</a></li>
-                </ul>
-                </div>
-                <div class="mdl-mini-footer__right-section">
-                    <small>&copy; 2021 Lfu ToolBox. All rights reserved.</small>
-                </div>
-            </footer>
+            
         </div>
     </body>
 </html>
