@@ -13,7 +13,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def root():
-    # myname = request.args.get("name")
     return render_template("home.html")
 
 
@@ -97,16 +96,16 @@ def area_rectangle():
     return response
 
 
+@app.route("/about")
+def about_this_site():
+    return render_template("about_this_site.html")
+
+
 # @app.route("/area/triangle")
 # def area_triangle():
 #    a = request.args.get("a", default=None, type=float)
 #    answer = round(0.5 * a * a * (math.sqrt(3) * 0.5), 2)
 #    return render_template("triangle.html", a=a, answer=answer)
-
-
-@app.route("/hello")
-def hello():
-    return "hello"
 
 
 if __name__ == '__main__':
