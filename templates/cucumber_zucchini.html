@@ -50,10 +50,10 @@
                 <div class="pagecontent">
                     <h1>キュウリかズッキーニか判別する</h1>
                     <div class="input">
-                        <form action="/classification/cucumber_zucchini" method="post" enctype="multipart/form-data">
+                        <form id="form" action="/classification/cucumber_zucchini" method="post" enctype="multipart/form-data">
                             <div>
                                 <p>
-                                    <label for="file" class="mdl-button mdl-js-button mdl-button--raised material-icons">
+                                    <label for="file" id="upload" class="mdl-button mdl-js-button mdl-button--raised">
                                         <i class="material-icons">cloud_upload</i>
                                         画像をアップロード
                                         <input class="mdl-button mdl-js-button" type="file" id="file" name="file" accept="image/png, image/jpeg">
@@ -65,14 +65,32 @@
                                     </style>
                                 </p>
                                 <p>
-                                    <input class="mdl-button mdl-js-button mdl-button--accent mdl-button--raised" type="submit" value="送信">
+                                    <input class="mdl-button mdl-js-button mdl-button--accent mdl-button--raised mdl-button--disabled" type="submit" id="submit" value="送信">
                                     <input class="mdl-button mdl-js-button" type="reset", id="reset", value="リセット">
                                 </p>
                                 <script>
+                                    let submit = document.getElementById("form");
+                                    submit.onsubmit = function() {
+                                        document.getElementById("file").disabled = false;
+                                    }
+
                                     let reset = document.getElementById("reset");
                                     reset.onclick = function() {
                                         let preview = document.getElementById("preview");
                                         preview.innerHTML = "";
+                                        document.getElementById("file").disabled = false;
+
+                                        let upload_button = document.getElementById("upload");
+                                        upload_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised");
+
+                                        let submit_button = document.getElementById("submit");
+                                        submit_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--accent mdl-button--raised mdl-button--disabled");
+                                        document.getElementById("submit").disabled = false;
+
+                                        let iframe = document.getElementById("results");
+                                        if (iframe != undefined) {
+                                            iframe.srcdoc = "";
+                                        }
                                     }
                                 </script>
                             </div>
@@ -81,6 +99,7 @@
 
                     <div id="preview"></div>
                     <script type="text/javascript">
+                        let test;
                         function previewFile(file) {
                             let preview = document.getElementById("preview");
                             preview.innerHTML = "";
@@ -91,6 +110,7 @@
                                 let imageUrl = e.target.result;
                                 let img = document.createElement("img");
                                 img.src = imageUrl;
+                                localStorage.setItem("preview_img", imageUrl);
                                 preview.appendChild(img);
                             }
                             reader.readAsDataURL(file);
@@ -103,8 +123,27 @@
                                 previewFile(files[i]);
                             }
                         }
-                        if (!fileInput){ print("fileInput is null") }
+                        if (!fileInput) { print("fileInput is null") }
                         fileInput.addEventListener("change", handleFileSelect);
+
+                        let submit_button = document.getElementById("submit");
+                        fileInput.onchange = function() {
+                            let upload_button = document.getElementById("upload");
+                            upload_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised mdl-button--disabled");
+                            document.getElementById("file").disabled = true;
+
+                            submit_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--accent mdl-button--raised");
+                            submit_button.disabled = false;
+                        }
+                        window.onload = function() {
+                            submit_button.disabled = true;
+                        }
+                        {% if classify %}
+                            let preview = document.getElementById("preview");
+                            let img = document.createElement("img");
+                            img.src = localStorage.getItem("preview_img");
+                            preview.appendChild(img);
+                        {% endif %}
                     </script>
                     
                     {% if table != undefined %}
@@ -118,10 +157,9 @@
                                 + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
                             let tail_html = '</table></body></html>';
                             var a = {{table|tojson}}.replace('border="1" class="dataframe data"', text);
-                            var b = a.replace("<table", head_html);
-                            var c = b.replace("</table>", tail_html);
-                            c = c.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
-                            iframe.srcdoc = c;
+                            a = a.replace("<table", head_html).replace("</table>", tail_html);
+                            a = a.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
+                            iframe.srcdoc = a;
 
                             iframe.onload = function() {
                                 let table_document = iframe.contentDocument || iframe.contentWindow.document;

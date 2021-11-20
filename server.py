@@ -32,7 +32,7 @@ def cucumber_zucchini():
         results = zn.predict(filepath)
         os.remove(filepath)
         table = results.to_html(classes="data")
-        return render_template("cucumber_zucchini.html", table=table)
+        return render_template("cucumber_zucchini.html", table=table, classify=True)
 
 
 @app.route("/area")
