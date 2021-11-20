@@ -68,8 +68,6 @@
                                     <input class="mdl-button mdl-js-button mdl-button--accent mdl-button--raised" type="submit" value="送信">
                                     <input class="mdl-button mdl-js-button" type="reset", id="reset", value="リセット">
                                 </p>
-                                
-                                
                                 <script>
                                     let reset = document.getElementById("reset");
                                     reset.onclick = function() {
@@ -82,33 +80,6 @@
                     </div>
 
                     <div id="preview"></div>
-
-                    
-
-                    <iframe id="results" frameborder="0" style="width: 200px; height: 268px;"></iframe>
-                
-                    <script type="text/javascript">
-                        let iframe = document.getElementById("results");
-                        let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: 0px 10px;"';
-                        let head_html = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr'
-                            + 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr'
-                            + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
-                        let tail_html = '</table></body></html>';
-                        var a = {{table|tojson}}.replace('border="1" class="dataframe data"', text);
-                        var b = a.replace("<table", head_html);
-                        var c = b.replace("</table>", tail_html);
-                        c = c.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
-                        iframe.srcdoc = c;
-
-                        iframe.onload = function() {
-                            let table_document = iframe.contentDocument || iframe.contentWindow.document;
-                            let table_width = table_document.getElementsByClassName("mdl-data-table")[0].offsetWidth;
-                            let table_height = table_document.getElementsByClassName("mdl-data-table")[0].offsetHeight;
-                            iframe.style.width = (table_width + 20).toString() + "px";
-                            iframe.style.height = (table_height + 20).toString() + "px";
-                        }
-                    </script>
-
                     <script type="text/javascript">
                         function previewFile(file) {
                             let preview = document.getElementById("preview");
@@ -122,7 +93,6 @@
                                 img.src = imageUrl;
                                 preview.appendChild(img);
                             }
-
                             reader.readAsDataURL(file);
                         }
 
@@ -136,6 +106,32 @@
                         if (!fileInput){ print("fileInput is null") }
                         fileInput.addEventListener("change", handleFileSelect);
                     </script>
+                    
+                    {% if table != undefined %}
+                        <iframe id="results" frameborder="0" style="width: 200px; height: 268px;"></iframe>
+
+                        <script type="text/javascript">
+                            let iframe = document.getElementById("results");
+                            let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: 0px 10px;"';
+                            let head_html = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr'
+                                + 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr'
+                                + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
+                            let tail_html = '</table></body></html>';
+                            var a = {{table|tojson}}.replace('border="1" class="dataframe data"', text);
+                            var b = a.replace("<table", head_html);
+                            var c = b.replace("</table>", tail_html);
+                            c = c.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
+                            iframe.srcdoc = c;
+
+                            iframe.onload = function() {
+                                let table_document = iframe.contentDocument || iframe.contentWindow.document;
+                                let table_width = table_document.getElementsByClassName("mdl-data-table")[0].offsetWidth;
+                                let table_height = table_document.getElementsByClassName("mdl-data-table")[0].offsetHeight;
+                                iframe.style.width = (table_width + 20).toString() + "px";
+                                iframe.style.height = (table_height + 20).toString() + "px";
+                            }
+                        </script>
+                    {% endif %}
                 </div>
             </main>
         </div>

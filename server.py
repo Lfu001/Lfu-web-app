@@ -23,21 +23,16 @@ def image_classification():
 
 @app.route("/classification/cucumber_zucchini", methods=["POST", "GET"])
 def cucumber_zucchini():
-    try:
-        if request.method == "GET":
-            return render_template("cucumber_zucchini.html")
-        elif request.method == 'POST':
-            f = request.files.get('file')
-            filepath = secure_filename(f.filename)
-            f.save(filepath)
-            results = zn.predict(filepath)
-            os.remove(filepath)
-            table = results.to_html(classes="data")
-            return render_template("cucumber_zucchini.html", table=table)
-        else:
-            return abort(400)
-    except Exception as e:
-        return str(e)
+    if request.method == "GET":
+        return render_template("cucumber_zucchini.html")
+    elif request.method == "POST":
+        f = request.files.get("file")
+        filepath = secure_filename(f.filename)
+        f.save(filepath)
+        results = zn.predict(filepath)
+        os.remove(filepath)
+        table = results.to_html(classes="data")
+        return render_template("cucumber_zucchini.html", table=table)
 
 
 @app.route("/area")
