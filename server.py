@@ -32,7 +32,8 @@ def cucumber_zucchini():
             f.save(filepath)
             results = zn.predict(filepath)
             os.remove(filepath)
-            return render_template("cucumber_zucchini.html", tables=[results.to_html(classes="data")], titles=results.columns.values)
+            table = results.to_html(classes="data")
+            return render_template("cucumber_zucchini.html", table=table)
         else:
             return abort(400)
     except Exception as e:
