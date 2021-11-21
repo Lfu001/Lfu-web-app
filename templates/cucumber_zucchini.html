@@ -22,6 +22,15 @@
                 margin: 10px;
                 border: solid 1px silver;
             }
+            div.preview-result-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            input#reset {
+                margin-left: 10px;
+                background: #f5f5f5;
+            }
         </style>
     </head>
     <body>
@@ -50,7 +59,7 @@
                 <div class="pagecontent">
                     <h1>キュウリかズッキーニか判別する</h1>
                     <div class="input">
-                        <form id="form" action="/classification/cucumber_zucchini" method="post" enctype="multipart/form-data">
+                        <form id="form" name="form" action="/classification/cucumber_zucchini" method="post" enctype="multipart/form-data">
                             <div>
                                 <p>
                                     <label for="file" id="upload" class="mdl-button mdl-js-button mdl-button--raised">
@@ -63,10 +72,7 @@
                                             display: none;
                                         }
                                     </style>
-                                </p>
-                                <p>
-                                    <input class="mdl-button mdl-js-button mdl-button--accent mdl-button--raised mdl-button--disabled" type="submit" id="submit" value="送信">
-                                    <input class="mdl-button mdl-js-button" type="reset", id="reset", value="リセット">
+                                    <input class="mdl-button mdl-js-button" type="reset", id="reset", value="リセット" hidden>
                                 </p>
                                 <script>
                                     let submit = document.getElementById("form");
@@ -82,11 +88,7 @@
 
                                         let upload_button = document.getElementById("upload");
                                         upload_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised");
-
-                                        let submit_button = document.getElementById("submit");
-                                        submit_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--accent mdl-button--raised mdl-button--disabled");
-                                        document.getElementById("submit").disabled = false;
-
+                                        
                                         let iframe = document.getElementById("results");
                                         if (iframe != undefined) {
                                             iframe.srcdoc = "";
@@ -97,79 +99,79 @@
                         </form>
                     </div>
 
-                    <div id="preview"></div>
-                    <script type="text/javascript">
-                        let test;
-                        function previewFile(file) {
-                            let preview = document.getElementById("preview");
-                            preview.innerHTML = "";
-
-                            let reader = new FileReader();
-
-                            reader.onload = function(e) {
-                                let imageUrl = e.target.result;
-                                let img = document.createElement("img");
-                                img.src = imageUrl;
-                                localStorage.setItem("preview_img", imageUrl);
-                                preview.appendChild(img);
-                            }
-                            reader.readAsDataURL(file);
-                        }
-
-                        let fileInput = document.getElementById("file");
-                        const handleFileSelect = () => {
-                            const files = fileInput.files;
-                            for (let i = 0; i < files.length; i++) {
-                                previewFile(files[i]);
-                            }
-                        }
-                        if (!fileInput) { print("fileInput is null") }
-                        fileInput.addEventListener("change", handleFileSelect);
-
-                        let submit_button = document.getElementById("submit");
-                        fileInput.onchange = function() {
-                            let upload_button = document.getElementById("upload");
-                            upload_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised mdl-button--disabled");
-                            document.getElementById("file").disabled = true;
-
-                            submit_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--accent mdl-button--raised");
-                            submit_button.disabled = false;
-                        }
-                        window.onload = function() {
-                            submit_button.disabled = true;
-                        }
-                        {% if classify %}
-                            let preview = document.getElementById("preview");
-                            let img = document.createElement("img");
-                            img.src = localStorage.getItem("preview_img");
-                            preview.appendChild(img);
-                        {% endif %}
-                    </script>
-                    
-                    {% if table != undefined %}
-                        <iframe id="results" frameborder="0" style="width: 200px; height: 268px;"></iframe>
-
+                    <div class="preview-result-wrapper">
+                        <div id="preview"></div>
                         <script type="text/javascript">
-                            let iframe = document.getElementById("results");
-                            let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: 0px 10px;"';
-                            let head_html = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr'
-                                + 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr'
-                                + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
-                            let tail_html = '</table></body></html>';
-                            var a = {{table|tojson}}.replace('border="1" class="dataframe data"', text);
-                            a = a.replace("<table", head_html).replace("</table>", tail_html);
-                            a = a.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
-                            iframe.srcdoc = a;
+                            let test;
+                            function previewFile(file) {
+                                let preview = document.getElementById("preview");
+                                preview.innerHTML = "";
 
-                            iframe.onload = function() {
-                                let table_document = iframe.contentDocument || iframe.contentWindow.document;
-                                let table_width = table_document.getElementsByClassName("mdl-data-table")[0].offsetWidth;
-                                let table_height = table_document.getElementsByClassName("mdl-data-table")[0].offsetHeight;
-                                iframe.style.width = (table_width + 20).toString() + "px";
-                                iframe.style.height = (table_height + 20).toString() + "px";
+                                let reader = new FileReader();
+
+                                reader.onload = function(e) {
+                                    let imageUrl = e.target.result;
+                                    let img = document.createElement("img");
+                                    img.src = imageUrl;
+                                    localStorage.setItem("preview_img", imageUrl);
+                                    preview.appendChild(img);
+                                    preview.style.opacity = .25;
+                                }
+                                reader.readAsDataURL(file);
                             }
+
+                            let fileInput = document.getElementById("file");
+                            const handleFileSelect = () => {
+                                const files = fileInput.files;
+                                for (let i = 0; i < files.length; i++) {
+                                    previewFile(files[i]);
+                                }
+                                document.form.submit();
+                            }
+                            if (!fileInput) { print("fileInput is null") }
+                            fileInput.addEventListener("change", handleFileSelect);
+
+                            fileInput.onchange = function() {
+                                let upload_button = document.getElementById("upload");
+                                upload_button.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised mdl-button--disabled");
+                                document.getElementById("file").disabled = true;
+                            }
+
+                            {% if classify %}
+                                let preview = document.getElementById("preview");
+                                let img = document.createElement("img");
+                                img.src = localStorage.getItem("preview_img");
+                                preview.appendChild(img);
+                                document.getElementById("reset").hidden = false;
+                            {% endif %}
                         </script>
-                    {% endif %}
+                    
+                        {% if table != undefined %}
+                            <iframe id="results" frameborder="0" style="width: 200px; height: 268px;"></iframe>
+
+                            <script type="text/javascript">
+                                let iframe = document.getElementById("results");
+                                let text = 'class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: 0px 10px;"';
+                                let head_html = '<!DOCTYPE html><html><head><meta charset="utf-8" /><script src="https://cdn.anychart.com/js/latest/graphics.min.js" type="text/javascript"></scr'
+                                    + 'ipt><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /><link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-amber.min.css" /><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></scr'
+                                    + 'ipt><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="display: flex; align-items: center;"><table ';
+                                let tail_html = '</table></body></html>';
+                                var a = {{table|tojson}}.replace('border="1" class="dataframe data"', text);
+                                a = a.replace("<table", head_html).replace("</table>", tail_html);
+                                a = a.replace("zucchini", "ズッキーニ").replace("cucumber", "キュウリ").replace("confidence", "確率");
+                                iframe.srcdoc = a;
+
+                                iframe.onload = function() {
+                                    let table_document = iframe.contentDocument || iframe.contentWindow.document;
+                                    let table_width = table_document.getElementsByClassName("mdl-data-table")[0].offsetWidth;
+                                    let table_height = table_document.getElementsByClassName("mdl-data-table")[0].offsetHeight;
+                                    iframe.style.width = (table_width + 20).toString() + "px";
+                                    iframe.style.height = (table_height + 20).toString() + "px";
+                                }
+                            </script>
+                        {% endif %}
+                    </div>
+                    
                 </div>
             </main>
         </div>
