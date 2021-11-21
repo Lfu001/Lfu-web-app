@@ -17,6 +17,11 @@
                 display: flex;
                 align-items: center;
             }
+            #preview {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
             #preview img {
                 width: 400px;
                 margin: 10px;
@@ -30,6 +35,9 @@
             input#reset {
                 margin-left: 10px;
                 background: #f5f5f5;
+            }
+            #spinner {
+                position: absolute;
             }
         </style>
     </head>
@@ -83,7 +91,9 @@
                                     let reset = document.getElementById("reset");
                                     reset.onclick = function() {
                                         let preview = document.getElementById("preview");
-                                        preview.innerHTML = "";
+                                        if (preview.lastChild != document.getElementById("spinner")) {
+                                            preview.removeChild(preview.lastChild);
+                                        }
                                         document.getElementById("file").disabled = false;
 
                                         let upload_button = document.getElementById("upload");
@@ -91,7 +101,7 @@
                                         
                                         let iframe = document.getElementById("results");
                                         if (iframe != undefined) {
-                                            iframe.srcdoc = "";
+                                            document.getElementById("wrapper").removeChild(iframe);
                                         }
                                     }
                                 </script>
@@ -99,14 +109,17 @@
                         </form>
                     </div>
 
-                    <div class="preview-result-wrapper">
-                        <div id="preview"></div>
+                    <div class="preview-result-wrapper" id="wrapper">
+                        <div id="preview">
+                            <div class="mdl-spinner mdl-js-spinner" id="spinner"></div>
+                        </div>
                         <script type="text/javascript">
-                            let test;
                             function previewFile(file) {
                                 let preview = document.getElementById("preview");
-                                preview.innerHTML = "";
-
+                                if (preview.lastChild != document.getElementById("spinner")) {
+                                    preview.removeChild(preview.lastChild);
+                                }
+                                
                                 let reader = new FileReader();
 
                                 reader.onload = function(e) {
@@ -115,18 +128,22 @@
                                     img.src = imageUrl;
                                     localStorage.setItem("preview_img", imageUrl);
                                     preview.appendChild(img);
-                                    preview.style.opacity = .25;
+                                    img.style.opacity = .25;
                                 }
                                 reader.readAsDataURL(file);
                             }
 
                             let fileInput = document.getElementById("file");
                             const handleFileSelect = () => {
+                                if (document.getElementById("results") != undefined) {
+                                    document.getElementById("wrapper").removeChild(iframe);
+                                }
                                 const files = fileInput.files;
                                 for (let i = 0; i < files.length; i++) {
                                     previewFile(files[i]);
                                 }
                                 document.form.submit();
+                                document.getElementById("spinner").setAttribute("class", "mdl-spinner mdl-js-spinner is-active is-upgraded");
                             }
                             if (!fileInput) { print("fileInput is null") }
                             fileInput.addEventListener("change", handleFileSelect);
