@@ -43,26 +43,8 @@
     </head>
     <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout__header-row">
-                    <span class="mdl-layout-title">Lfu ToolBox</span>
-                    <div class="mdl-layout-spacer"></div>
-                    <nav class="mdl-navigation mdl-layout--large-screen-only">
-                        <a class="mdl-navigation__link" href="/area">図形の面積の計算</a>
-                        <a class="mdl-navigation__link" href="/classification">画像の分類</a>
-                    </nav>
-                </div>
-            </header>
-            <div class="mdl-layout__drawer">
-                <span class="mdl-layout-title">Lfu ToolBox</span>
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="/area/circle">円の面積の計算</a>
-                    <a class="mdl-navigation__link" href="/area/rectangle">長方形の面積の計算</a>
-                </nav>
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="/classification/cucumber_zucchini">キュウリとズッキーニの分類</a>
-                </nav>
-            </div>
+            {% include "header.html" %}
+            {% include "drawer.html" %}
             <main class="mdl-layout__content">
                 <div class="pagecontent">
                     <h1>キュウリかズッキーニか判別する</h1>
@@ -205,17 +187,7 @@
                     window.onload = setSpacer;
                     window.onresize = setSpacer;
                 </script>
-                <footer class="mdl-mini-footer">
-                    <div class="mdl-mini-footer__left-section">
-                    <div class="mdl-logo"></div>
-                    <ul class="mdl-mini-footer__link-list">
-                        <li><a href="/about">このサイトについて</a></li>
-                    </ul>
-                    </div>
-                    <div class="mdl-mini-footer__right-section">
-                        <small>&copy; 2021 Lfu ToolBox. All rights reserved.</small>
-                    </div>
-                </footer>
+                {% include "footer.html" %}
             </main>
         </div>
     </body>
