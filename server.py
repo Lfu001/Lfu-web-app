@@ -3,6 +3,7 @@ import math
 import pandas as pd
 import historyDB as db
 import zuccumberNet as zn
+import dog_cat as dc
 from werkzeug.utils import secure_filename
 import uuid
 from datetime import datetime
@@ -33,6 +34,20 @@ def cucumber_zucchini():
         os.remove(filepath)
         table = results.to_html(classes="data")
         return render_template("cucumber_zucchini.html", table=table, classify=True)
+
+
+@app.route("/classification/dog_cat", methods=["POST", "GET"])
+def dog_cat():
+    if request.method == "GET":
+        return render_template("dog_cat.html")
+    elif request.method == "POST":
+        f = request.files.get("file")
+        filepath = secure_filename(f.filename)
+        f.save(filepath)
+        results = dc.predict(filepath)
+        os.remove(filepath)
+        table = results.to_html(classes="data")
+        return render_template("dog_cat.html", table=table, classify=True)
 
 
 @app.route("/area")
